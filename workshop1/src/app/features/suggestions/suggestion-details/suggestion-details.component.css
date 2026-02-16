@@ -1,0 +1,236 @@
+/* Conteneur principal */
+.details-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* Header */
+.details-header {
+    margin-bottom: 2rem;
+}
+
+.btn-back {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
+    transform: translateX(-5px);
+}
+
+/* Carte de détails */
+.details-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    border-left: 6px solid #ccc;
+}
+
+.details-card.status-accepted {
+    border-left-color: #28a745;
+}
+
+.details-card.status-refused {
+    border-left-color: #dc3545;
+    opacity: 0.85;
+}
+
+.details-card.status-pending {
+    border-left-color: #ffc107;
+}
+
+/* Titre */
+.details-card h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 0.75rem;
+}
+
+/* Section description */
+.details-section {
+    margin: 2rem 0;
+}
+
+.details-section h3 {
+    color: #555;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+}
+
+.details-section p {
+    color: #666;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Informations */
+.details-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item strong {
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Badges */
+.category-badge {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-accepted {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-refused {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.likes-count {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Actions */
+.details-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+}
+
+.btn-primary {
+    flex: 1;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-secondary {
+    flex: 1;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 2px solid #dee2e6;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e6ea;
+    border-color: #adb5bd;
+}
+
+/* Notice de refus */
+.refusal-notice {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    border-radius: 6px;
+}
+
+.refusal-notice p {
+    color: #721c24;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Erreur */
+.error-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error-container h3 {
+    color: #dc3545;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.error-container p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .details-card {
+        padding: 1.5rem;
+    }
+
+    .details-info {
+        grid-template-columns: 1fr;
+    }
+
+    .details-actions {
+        flex-direction: column;
+    }
+
+    .details-card h2 {
+        font-size: 1.5rem;
+    }
+}

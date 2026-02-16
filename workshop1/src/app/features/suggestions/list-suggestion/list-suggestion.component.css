@@ -1,0 +1,167 @@
+/* Titre principal */
+h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 2rem;
+}
+
+/* Conteneur de recherche */
+.search-container {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-container input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Conteneur des suggestions */
+.suggestions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+/* Carte de suggestion */
+.suggestion-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 5px solid #ccc;
+}
+
+.suggestion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Statuts */
+.suggestion-card.status-accepted {
+    border-left-color: #28a745;
+}
+
+.suggestion-card.status-refused {
+    border-left-color: #dc3545;
+    opacity: 0.75;
+}
+
+.suggestion-card.status-pending {
+    border-left-color: #ffc107;
+}
+
+/* Titre */
+.suggestion-card h3 {
+    color: #333;
+    margin-bottom: 0.75rem;
+    font-size: 1.3rem;
+}
+
+/* Description */
+.suggestion-card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+/* Catégorie et date */
+.category-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.category {
+    background-color: #007bff;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-weight: 500;
+}
+
+.date {
+    color: #999;
+}
+
+/* Groupe de boutons */
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.button-group button {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 100px;
+}
+
+/* Bouton Détails */
+.details-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.details-btn:hover {
+    background-color: #5a6268;
+    transform: scale(1.05);
+}
+
+/* Bouton Like */
+.like-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.like-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Bouton Favoris */
+.favorite-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.favorite-btn:hover {
+    background-color: #e0a800;
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .suggestions-container {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group button {
+        width: 100%;
+    }
+}

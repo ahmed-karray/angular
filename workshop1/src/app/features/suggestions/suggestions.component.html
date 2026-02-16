@@ -1,0 +1,18 @@
+<div class="suggestions-module">
+    <div class="module-header">
+        <h1>📋 Module Suggestions</h1>
+        <p class="subtitle">Gérez et consultez toutes les suggestions</p>
+    </div>
+
+    <!-- Navigation interne optionnelle -->
+    <nav class="sub-nav">
+        <a routerLink="/suggestions" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            📑 Liste des Suggestions
+        </a>
+    </nav>
+
+    <!-- Zone d'affichage des composants enfants -->
+    <div class="module-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

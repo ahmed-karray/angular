@@ -1,0 +1,53 @@
+.suggestions-module {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.module-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.module-header h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.sub-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.sub-nav a {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    color: #666;
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.sub-nav a:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.sub-nav a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.module-content {
+    margin-top: 2rem;
+}

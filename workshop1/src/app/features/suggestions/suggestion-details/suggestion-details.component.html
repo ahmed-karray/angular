@@ -1,0 +1,79 @@
+<div class="details-container" *ngIf="suggestion">
+    <!-- Header avec bouton retour -->
+    <div class="details-header">
+        <button (click)="goBackToList()" class="btn-back">
+            ← Retour à la liste
+        </button>
+    </div>
+
+    <!-- Carte de détails -->
+    <div class="details-card" [ngClass]="{
+    'status-accepted': suggestion.status === 'acceptee',
+    'status-refused': suggestion.status === 'refusee',
+    'status-pending': suggestion.status === 'en_attente'
+  }">
+
+        <!-- Titre -->
+        <h2>{{ suggestion.title }}</h2>
+
+        <!-- Description -->
+        <div class="details-section">
+            <h3>Description</h3>
+            <p>{{ suggestion.description }}</p>
+        </div>
+
+        <!-- Informations -->
+        <div class="details-info">
+            <div class="info-item">
+                <strong>Catégorie:</strong>
+                <span class="category-badge">{{ suggestion.category }}</span>
+            </div>
+
+            <div class="info-item">
+                <strong>Date de soumission:</strong>
+                <span>{{ suggestion.date | date:'dd/MM/yyyy' }}</span>
+            </div>
+
+            <div class="info-item">
+                <strong>Statut:</strong>
+                <span class="status-badge" [ngClass]="{
+          'badge-accepted': suggestion.status === 'acceptee',
+          'badge-refused': suggestion.status === 'refusee',
+          'badge-pending': suggestion.status === 'en_attente'
+        }">
+                    <span *ngIf="suggestion.status === 'acceptee'">✅ Acceptée</span>
+                    <span *ngIf="suggestion.status === 'refusee'">❌ Refusée</span>
+                    <span *ngIf="suggestion.status === 'en_attente'">⏳ En attente</span>
+                </span>
+            </div>
+
+            <div class="info-item">
+                <strong>Nombre de likes:</strong>
+                <span class="likes-count">👍 {{ suggestion.nbLikes }}</span>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="details-actions" *ngIf="suggestion.status !== 'refusee'">
+            <button class="btn-primary" (click)="likeSuggestion()">
+                👍 J'aime cette suggestion
+            </button>
+            <button class="btn-secondary">
+                💬 Commenter
+            </button>
+        </div>
+
+        <div class="refusal-notice" *ngIf="suggestion.status === 'refusee'">
+            <p>⚠️ Cette suggestion a été refusée et n'est plus active.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Message d'erreur si suggestion non trouvée -->
+<div class="error-container" *ngIf="!suggestion">
+    <h3>❌ Suggestion non trouvée</h3>
+    <p>La suggestion avec l'ID {{ suggestionId }} n'existe pas.</p>
+    <button (click)="goBackToList()" class="btn-back">
+        ← Retour à la liste
+    </button>
+</div>
