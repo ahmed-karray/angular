@@ -1,4 +1,11 @@
-<h2>Liste des suggestions</h2>
+<div class="header-actions">
+    <h2>Liste des suggestions</h2>
+
+    <!-- ✨ NOUVEAU : Bouton Ajouter Suggestion -->
+    <button class="btn-add" routerLink="/suggestions/create">
+        ➕ Ajouter une suggestion
+    </button>
+</div>
 
 <div class="search-container">
     <input type="text" placeholder="🔍 Rechercher une suggestion..." [(ngModel)]="searchText" />
@@ -21,7 +28,8 @@
 
         <div class="button-group">
             <!-- ✨ BOUTON DÉTAILS - Navigation vers SuggestionDetailsComponent -->
-            <button class="details-btn" [routerLink]="['/suggestions', s.id]">
+            <button class="details-btn" [routerLink]="['/suggestions', s.id]" [disabled]="!s.id"
+                (click)="debugNavigation(s)">
                 📋 Détails
             </button>
 
@@ -33,6 +41,10 @@
             <button class="favorite-btn" (click)="addToFavoris(s)" *ngIf="s.status !== 'refusee'">
                 ⭐ Favoris
             </button>
+            <button class="delete-btn" (click)="deleteSuggestion(s.id)">
+                🗑️ Supprimer
+            </button>
+
         </div>
     </div>
 </div>

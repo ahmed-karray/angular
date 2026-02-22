@@ -1,20 +1,34 @@
-<div class="details-container" *ngIf="suggestion">
-    <!-- Header avec bouton retour -->
+<div class="details-container">
+    <!-- Bouton retour -->
     <div class="details-header">
         <button (click)="goBackToList()" class="btn-back">
             ← Retour à la liste
         </button>
     </div>
 
-    <!-- Carte de détails -->
-    <div class="details-card" [ngClass]="{
-    'status-accepted': suggestion.status === 'acceptee',
-    'status-refused': suggestion.status === 'refusee',
-    'status-pending': suggestion.status === 'en_attente'
-  }">
+    <!-- Indicateur de chargement -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="error && !loading" class="error-container">
+        <h3>❌ Erreur</h3>
+        <p>{{ error }}</p>
+        <button (click)="loadSuggestion()" class="btn-retry">Réessayer</button>
+        <button (click)="goBackToList()" class="btn-back">Retour à la liste</button>
+    </div>
+
+    <!-- Détails de la suggestion -->
+    <div *ngIf="suggestion && !loading && !error" class="details-card" [ngClass]="{
+         'status-accepted': suggestion.status === 'acceptee',
+         'status-refused': suggestion.status === 'refusee',
+         'status-pending': suggestion.status === 'en_attente'
+       }">
 
         <!-- Titre -->
-        <h2>{{ suggestion.title }}</h2>
+        <h2 class="suggestion-title">{{ suggestion.title }}</h2>
 
         <!-- Description -->
         <div class="details-section">
@@ -25,55 +39,55 @@
         <!-- Informations -->
         <div class="details-info">
             <div class="info-item">
-                <strong>Catégorie:</strong>
+                <strong>Catégorie</strong>
                 <span class="category-badge">{{ suggestion.category }}</span>
             </div>
 
             <div class="info-item">
-                <strong>Date de soumission:</strong>
-                <span>{{ suggestion.date | date:'dd/MM/yyyy' }}</span>
+                <strong>Date de soumission</strong>
+                <span class="date-text">{{ suggestion.date | date:'dd/MM/yyyy' }}</span>
             </div>
 
             <div class="info-item">
-                <strong>Statut:</strong>
-                <span class="status-badge" [ngClass]="{
-          'badge-accepted': suggestion.status === 'acceptee',
-          'badge-refused': suggestion.status === 'refusee',
-          'badge-pending': suggestion.status === 'en_attente'
-        }">
-                    <span *ngIf="suggestion.status === 'acceptee'">✅ Acceptée</span>
-                    <span *ngIf="suggestion.status === 'refusee'">❌ Refusée</span>
-                    <span *ngIf="suggestion.status === 'en_attente'">⏳ En attente</span>
+                <strong>Statut</strong>
+                <span class="status-badge" [ngClass]="getStatusClass()">
+                    {{ getStatusLabel() }}
                 </span>
             </div>
 
             <div class="info-item">
-                <strong>Nombre de likes:</strong>
+                <strong>Nombre de likes</strong>
                 <span class="likes-count">👍 {{ suggestion.nbLikes }}</span>
             </div>
         </div>
 
         <!-- Actions -->
-        <div class="details-actions" *ngIf="suggestion.status !== 'refusee'">
-            <button class="btn-primary" (click)="likeSuggestion()">
-                👍 J'aime cette suggestion
+        <div class="details-actions">
+            <button *ngIf="suggestion.status !== 'refusee'" class="btn-primary" (click)="likeSuggestion()">
+                � J'aime cette suggestion
             </button>
-            <button class="btn-secondary">
-                💬 Commenter
+
+            <button class="btn-warning" (click)="editSuggestion()">
+                ✏️ Modifier
+            </button>
+
+            <button class="btn-danger" (click)="deleteSuggestion()">
+                🗑️ Supprimer
             </button>
         </div>
 
-        <div class="refusal-notice" *ngIf="suggestion.status === 'refusee'">
+        <!-- Notice de refus -->
+        <div *ngIf="suggestion.status === 'refusee'" class="refusal-notice">
             <p>⚠️ Cette suggestion a été refusée et n'est plus active.</p>
         </div>
     </div>
-</div>
 
-<!-- Message d'erreur si suggestion non trouvée -->
-<div class="error-container" *ngIf="!suggestion">
-    <h3>❌ Suggestion non trouvée</h3>
-    <p>La suggestion avec l'ID {{ suggestionId }} n'existe pas.</p>
-    <button (click)="goBackToList()" class="btn-back">
-        ← Retour à la liste
-    </button>
+    <!-- Message si suggestion non trouvée -->
+    <div *ngIf="!suggestion && !loading && !error" class="error-container">
+        <h3>❌ Suggestion non trouvée</h3>
+        <p>La suggestion avec l'ID {{ suggestionId }} n'existe pas.</p>
+        <button (click)="goBackToList()" class="btn-back">
+            ← Retour à la liste
+        </button>
+    </div>
 </div>

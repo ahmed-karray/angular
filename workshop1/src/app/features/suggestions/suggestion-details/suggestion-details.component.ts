@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
+import { SuggestionService } from '../../../core/Services/suggestion.service';
 
 @Component({
   selector: 'app-suggestion-details',
@@ -10,66 +11,50 @@ import { Suggestion } from '../../../models/suggestion';
 export class SuggestionDetailsComponent implements OnInit {
   suggestionId!: number;
   suggestion: Suggestion | null = null;
-
-  // Données fictives (à remplacer par un service)
-  private allSuggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: 'Suggestion pour organiser une journée de team building pour renforcer les liens entre les membres de l\'équipe.',
-      category: 'Événements',
-      date: new Date('2025-01-20'),
-      status: 'acceptee',
-      nbLikes: 10
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Proposition pour améliorer la gestion des réservations en ligne avec un système de confirmation automatique.',
-      category: 'Technologie',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 3,
-      title: 'Créer un système de récompenses',
-      description: 'Mise en place d\'un programme de récompenses pour motiver les employés et reconnaître leurs efforts.',
-      category: 'Ressources Humaines',
-      date: new Date('2025-01-25'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 4,
-      title: 'Moderniser l\'interface utilisateur',
-      description: 'Refonte complète de l\'interface utilisateur pour une meilleure expérience utilisateur.',
-      category: 'Technologie',
-      date: new Date('2025-01-30'),
-      status: 'en_attente',
-      nbLikes: 0
-    }
-  ];
+  loading = true;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private suggestionService: SuggestionService
   ) { }
 
   ngOnInit(): void {
-    // Récupérer l'ID depuis l'URL
     this.route.params.subscribe(params => {
-      this.suggestionId = +params['id']; // Le '+' convertit string en number
-      this.loadSuggestionDetails();
+      this.suggestionId = +params['id'];
+      console.log('aaaaaaaaa', this.suggestionId);
+      this.loadSuggestion();
     });
   }
 
-  loadSuggestionDetails(): void {
-    this.suggestion = this.allSuggestions.find(s => s.id === this.suggestionId) || null;
+  loadSuggestion(): void {
+    this.loading = true;
+    this.error = null;
 
-    if (!this.suggestion) {
-      console.error('Suggestion non trouvée avec ID:', this.suggestionId);
-    }
+    this.suggestionService.getSuggestionById(this.suggestionId).subscribe({
+      next: (data: any) => { // Use any or a specific Response interface
+        console.log('Réponse brute:', data);
+
+        // 1. Check if the nested suggestion object exists
+        if (!data || !data.suggestion) {
+          this.error = `Suggestion ${this.suggestionId} introuvable`;
+          this.loading = false;
+          return;
+        }
+
+        // 2. Assign the INNER suggestion object
+        this.suggestion = data.suggestion;
+
+        console.log('Données assignées à this.suggestion:', this.suggestion);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+        this.error = 'Erreur lors du chargement';
+        this.loading = false;
+      }
+    });
   }
 
   goBackToList(): void {
@@ -77,9 +62,90 @@ export class SuggestionDetailsComponent implements OnInit {
   }
 
   likeSuggestion(): void {
-    if (this.suggestion) {
-      this.suggestion.nbLikes++;
-      console.log(`Likes: ${this.suggestion.nbLikes}`);
+    if (!this.suggestion || !this.suggestion.id) {
+      console.error("Impossible de liker : ID manquant", this.suggestion);
+      return;
+    }
+
+    // 1. Save original state for rollback
+    const originalSuggestion = { ...this.suggestion };
+
+    // 2. Optimistic Update (update UI immediately)
+    this.suggestion.nbLikes = (Number(this.suggestion.nbLikes) || 0) + 1;
+
+    this.suggestionService.updateSuggestion(this.suggestion).subscribe({
+      next: (response: any) => {
+        // 3. Extract the suggestion object correctly
+        const updatedData = response.suggestion ? response.suggestion : response;
+
+        // 4. Update local state while ENSURING the ID stays
+        this.suggestion = {
+          ...updatedData,
+          id: updatedData.id || originalSuggestion.id, // Keep the ID!
+          nbLikes: updatedData.nbLikes !== undefined ? Number(updatedData.nbLikes) : originalSuggestion.nbLikes + 1
+        };
+        this.loadSuggestion();
+        //console.log('Mis à jour avec succès. ID actuel:', this.suggestion.id);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour:', err);
+        // Rollback on error
+        this.suggestion = originalSuggestion;
+        alert('Erreur lors de la mise à jour des likes');
+      }
+    });
+  }
+
+  editSuggestion(): void {
+    if (this.suggestion?.id) {
+      this.router.navigate(['/suggestions/edit', this.suggestion.id]);
+    }
+  }
+
+  deleteSuggestion(): void {
+    if (!this.suggestion?.id) return;
+
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette suggestion ?')) {
+      this.suggestionService.deleteSuggestion(this.suggestion.id).subscribe({
+        next: () => {
+          alert('Suggestion supprimée avec succès');
+          this.router.navigate(['/suggestions']);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la suppression:', err);
+          alert('Erreur lors de la suppression');
+        }
+      });
+    }
+  }
+
+  getStatusLabel(): string {
+    if (!this.suggestion) return '';
+
+    switch (this.suggestion.status) {
+      case 'acceptee':
+        return '✅ Acceptée';
+      case 'refusee':
+        return '❌ Refusée';
+      case 'en_attente':
+        return '⏳ En attente';
+      default:
+        return this.suggestion.status;
+    }
+  }
+
+  getStatusClass(): string {
+    if (!this.suggestion) return '';
+
+    switch (this.suggestion.status) {
+      case 'acceptee':
+        return 'badge-accepted';
+      case 'refusee':
+        return 'badge-refused';
+      case 'en_attente':
+        return 'badge-pending';
+      default:
+        return '';
     }
   }
 }
